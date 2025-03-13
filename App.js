@@ -1,6 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import Celula from './src/components/Celula'
 import Tabuleiro from './src/components/Tabuleiro';
 
 export default function App() {
