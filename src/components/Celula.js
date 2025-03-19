@@ -1,9 +1,9 @@
 import { StyleSheet, Text, Touchable, TouchableOpacity, View } from 'react-native';
 
-export default function Celula({valor}){
+export default function Celula({valor, onPress}){
     return(
         <View style={styles.container}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={onPress}>
             <Text styles={styles.text}>{valor}</Text>
           </TouchableOpacity>
         </View>

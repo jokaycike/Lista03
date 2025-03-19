@@ -1,14 +1,32 @@
 import { StyleSheet, View } from 'react-native';
 import Celula from './Celula';
+import React, {useState} from 'react';
 
 export default function Tabuleiro(){
   const [tabuleiroJogo, setTabuleiroJogo] = 
   useState(Array(9).fill('--'));
+  const [jogadas, setJogadas] = useState(0)
 
   function fazerjogada(indice){
-    let tabuleiroAux = tabuleiroJogo
-    tabuleiroAux[indice] = 'X'
+    let tabuleiroAux = [...tabuleiroJogo]
+    let numeroJogadas = jogadas
+    numeroJogadas++
+    if(numeroJogadas % 2 === 0){
+      tabuleiroAux[indice] = 'O'
+    } else {
+      tabuleiroAux[indice] = 'X'
+    }
+
+    setJogadas(numeroJogadas)
     setTabuleiroJogo(tabuleiroAux)
+
+    if (jogadas == 9){
+      alert('Deu Velha!')
+    } else if (verificarVitoria('X')){
+      alert('Jogador X venceu!')
+    } else if (verificarVitoria('O')){
+      alert('Jogador O venceu!')
+    }
   }
 
   return(
