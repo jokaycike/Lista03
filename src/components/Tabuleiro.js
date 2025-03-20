@@ -7,6 +7,8 @@ export default function Tabuleiro(){
   useState(Array(9).fill('--'));
   const [jogadas, setJogadas] = useState(0)
 
+ 
+
   function fazerjogada(indice){
     let tabuleiroAux = [...tabuleiroJogo]
     let numeroJogadas = jogadas
@@ -17,15 +19,32 @@ export default function Tabuleiro(){
       tabuleiroAux[indice] = 'X'
     }
 
+    function verificarVitoria(jogador){
+      if(
+        (tabuleiroAux[0] === jogador && tabuleiroAux[1] === jogador && tabuleiroAux[2] === jogador) ||
+        (tabuleiroAux[3] === jogador && tabuleiroAux[4] === jogador && tabuleiroAux[5] === jogador) ||
+        (tabuleiroAux[6] === jogador && tabuleiroAux[7] === jogador && tabuleiroAux[8] === jogador) ||
+        (tabuleiroAux[0] === jogador && tabuleiroAux[3] === jogador && tabuleiroAux[6] === jogador) ||
+        (tabuleiroAux[1] === jogador && tabuleiroAux[4] === jogador && tabuleiroAux[7] === jogador) ||
+        (tabuleiroAux[2] === jogador && tabuleiroAux[5] === jogador && tabuleiroAux[8] === jogador) ||
+        (tabuleiroAux[0] === jogador && tabuleiroAux[4] === jogador && tabuleiroAux[8] === jogador) ||
+        (tabuleiroAux[2] === jogador && tabuleiroAux[4] === jogador && tabuleiroAux[6] === jogador)
+      ){
+        return true
+      } else {
+        return false
+      }
+    }
+
     setJogadas(numeroJogadas)
     setTabuleiroJogo(tabuleiroAux)
 
-    if (jogadas == 9){
-      alert('Deu Velha!')
-    } else if (verificarVitoria('X')){
+    if (verificarVitoria('X')){
       alert('Jogador X venceu!')
     } else if (verificarVitoria('O')){
       alert('Jogador O venceu!')
+    } else if (numeroJogadas === 9){
+      alert('Deu Velha!')
     }
   }
 
