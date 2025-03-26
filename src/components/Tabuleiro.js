@@ -17,6 +17,11 @@ export default function Tabuleiro(){
       tabuleiroAux[indice] = 'O'
     } else {
       tabuleiroAux[indice] = 'X'
+      //calcular aleatorio um numero entre 0 e 8
+      //Math.Random
+      //se tiver vazio, fazer a jogada
+      //se não, sortear outro número
+      fazerjogada(3);
     }
 
     function verificarVitoria(jogador){
