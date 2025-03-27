@@ -1,77 +1,97 @@
 import { StyleSheet, View } from 'react-native';
 import Celula from './Celula';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
-export default function Tabuleiro(){
-  const [tabuleiroJogo, setTabuleiroJogo] = 
-  useState(Array(9).fill('--'));
-  const [jogadas, setJogadas] = useState(0)
+export default function Tabuleiro() {
+  const [tabuleiroJogo, setTabuleiroJogo] = useState(Array(9).fill('--'));
+  const [jogadas, setJogadas] = useState(0);
 
- 
+  function fazerjogada(indice) {
+    let tabuleiroAux = [...tabuleiroJogo];
+    let numeroJogadas = jogadas;
 
-  function fazerjogada(indice){
-    let tabuleiroAux = [...tabuleiroJogo]
-    let numeroJogadas = jogadas
-    numeroJogadas++
-    if(numeroJogadas % 2 === 0){
-      tabuleiroAux[indice] = 'O'
-    } else {
-      tabuleiroAux[indice] = 'X'
-      //calcular aleatorio um numero entre 0 e 8
-      //Math.Random
-      //se tiver vazio, fazer a jogada
-      //se não, sortear outro número
-      fazerjogada(3);
+
+    if (tabuleiroAux[indice] !== '--') {
+      return;
     }
 
-    function verificarVitoria(jogador){
-      if(
-        (tabuleiroAux[0] === jogador && tabuleiroAux[1] === jogador && tabuleiroAux[2] === jogador) ||
-        (tabuleiroAux[3] === jogador && tabuleiroAux[4] === jogador && tabuleiroAux[5] === jogador) ||
-        (tabuleiroAux[6] === jogador && tabuleiroAux[7] === jogador && tabuleiroAux[8] === jogador) ||
-        (tabuleiroAux[0] === jogador && tabuleiroAux[3] === jogador && tabuleiroAux[6] === jogador) ||
-        (tabuleiroAux[1] === jogador && tabuleiroAux[4] === jogador && tabuleiroAux[7] === jogador) ||
-        (tabuleiroAux[2] === jogador && tabuleiroAux[5] === jogador && tabuleiroAux[8] === jogador) ||
-        (tabuleiroAux[0] === jogador && tabuleiroAux[4] === jogador && tabuleiroAux[8] === jogador) ||
-        (tabuleiroAux[2] === jogador && tabuleiroAux[4] === jogador && tabuleiroAux[6] === jogador)
-      ){
-        return true
-      } else {
-        return false
+    numeroJogadas++;
+    tabuleiroAux[indice] = 'X';
+    setTabuleiroJogo(tabuleiroAux);
+
+    if (verificarVitoria('X')) {
+      setTimeout(() => alert('Jogador X venceu!'), 100);
+      return;
+    }
+
+    if (numeroJogadas === 9) {
+      setTimeout(() => alert('Deu Velha!'), 100);
+      return;
+    }
+
+    const indiceMaquina = escolherJogadaMaquina(tabuleiroAux);
+    if (indiceMaquina !== -1) {
+      tabuleiroAux[indiceMaquina] = 'O';
+      numeroJogadas++;
+      setTabuleiroJogo(tabuleiroAux);
+
+      if (verificarVitoria('O')) {
+        setTimeout(() => alert('Jogador O venceu!'), 100);
+        return;
       }
     }
 
-    setJogadas(numeroJogadas)
-    setTabuleiroJogo(tabuleiroAux)
-
-    if (verificarVitoria('X')){
-      alert('Jogador X venceu!')
-    } else if (verificarVitoria('O')){
-      alert('Jogador O venceu!')
-    } else if (numeroJogadas === 9){
-      alert('Deu Velha!')
-    }
+    setJogadas(numeroJogadas);
+    setTabuleiroJogo(tabuleiroAux);
   }
 
-  return(
-      <View style={styles.container}>
-          <Celula valor={tabuleiroJogo[0]} onPress={() => fazerjogada(0)}/>
-          <Celula valor={tabuleiroJogo[1]} onPress={() => fazerjogada(1)}/>
-          <Celula valor={tabuleiroJogo[2]} onPress={() => fazerjogada(2)}/>
-          <Celula valor={tabuleiroJogo[3]} onPress={() => fazerjogada(3)}/>
-          <Celula valor={tabuleiroJogo[4]} onPress={() => fazerjogada(4)}/>
-          <Celula valor={tabuleiroJogo[5]} onPress={() => fazerjogada(5)}/>
-          <Celula valor={tabuleiroJogo[6]} onPress={() => fazerjogada(6)}/>
-          <Celula valor={tabuleiroJogo[7]} onPress={() => fazerjogada(7)}/>
-          <Celula valor={tabuleiroJogo[8]} onPress={() => fazerjogada(8)}/>
-      </View>
-  )
+  function escolherJogadaMaquina(tabuleiro) {
+    const indicesVazios = tabuleiro
+      .map((valor, indice) => (valor === '--' ? indice : null))
+      .filter((indice) => indice !== null);
+
+    if (indicesVazios.length === 0) {
+      return -1;
+    }
+
+    const indiceAleatorio =
+      indicesVazios[Math.floor(Math.random() * indicesVazios.length)];
+    return indiceAleatorio;
+  }
+
+  function verificarVitoria(jogador) {
+    const vitorias = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
+
+    return vitorias.some(
+      ([a, b, c]) =>
+        tabuleiroJogo[a] === jogador &&
+        tabuleiroJogo[b] === jogador &&
+        tabuleiroJogo[c] === jogador
+    );
+  }
+
+  return (
+    <View style={styles.container}>
+      {tabuleiroJogo.map((valor, indice) => (
+        <Celula key={indice} valor={valor} onPress={() => fazerjogada(indice)} />
+      ))}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-  container:{
+  container: {
     width: 300,
-    flexDirection:'row',
-    flexWrap:'wrap',
-  }
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
 });
